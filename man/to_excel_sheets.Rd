@@ -2,7 +2,7 @@
 % Please edit documentation in R/file_handling.R
 \name{to_excel_sheets}
 \alias{to_excel_sheets}
-\title{to_excel_sheets}
+\title{Export to Successive Excel Sheets}
 \usage{
 to_excel_sheets(data, path, split_col = "SL", delete = TRUE)
 }
@@ -16,5 +16,5 @@ to_excel_sheets(data, path, split_col = "SL", delete = TRUE)
 \item{delete}{Logical. TRUE to delete the column being used to split, FALSE otherwise.}
 }
 \description{
-to_excel_sheets
+Export to Successive Excel Sheets
 }

@@ -12,9 +12,10 @@
 #' @param vol_share Level among attribute levels that contains sales value market share.
 #' @param decimals Numeric value that specifies how many digits to retain after decimal.
 #' @param progress_full Logical. TRUE to show full process as the program loops through market and product levels.
-#' @rawNamespace import(dplyr)
+#' @import dplyr
+#' @import rlang
 #'
-#' @return
+#' @return A data frame
 #' @export
 market_share <- function(data,
                          market = "MARKET",

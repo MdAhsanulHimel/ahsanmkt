@@ -6,43 +6,43 @@
 \usage{
 market_share(
   data,
-  attribute = "Attribute",
   market = "MARKET",
   product_level = "PROD_LEVEL",
+  base_level = "1_CATEGORY_TOTAL",
+  attribute = "Attribute",
   val = "Sales Offtake Value (mil)",
   vol = "Sales Offtake Volume (ton)",
   val_share = "Market Share (Value)",
   vol_share = "Market Share (Volume)",
-  top_level = "1_CATEGORY_TOTAL",
   decimals = 7,
   progress_full = FALSE
 )
 }
 \arguments{
-\item{data}{Data frame of the specific structure.}
+\item{data}{Name of the data frame object.}
 
-\item{attribute}{Name of the column that contains the attributes.}
+\item{market}{Column name that contains the markets.}
 
-\item{market}{Name of the column that contains the markets.}
+\item{product_level}{Column name that contains the product levels.}
 
-\item{product_level}{Name of the column that contains the product levels.}
+\item{base_level}{Product level to use as denominator when calculating market share.}
 
-\item{val}{Name of the attribute that contains sales offtake value in million.}
+\item{attribute}{Column name that contains the attribute.}
 
-\item{vol}{Name of the attribute that contains sales offtake volume in tons.}
+\item{val}{Level among attribute levels that contains sales value.}
 
-\item{val_share}{Name of the attribute that contains market share in terms of value.}
+\item{vol}{Level among attribute levels that contains sales volume.}
 
-\item{vol_share}{Name of the attribute that contains market share in terms of volume.}
+\item{val_share}{Level among attribute levels that contains sales volume market share.}
 
-\item{top_level}{Name of the product level to use as base.}
+\item{vol_share}{Level among attribute levels that contains sales value market share.}
 
-\item{decimals}{Number of digits to retain after decimals.}
+\item{decimals}{Numeric value that specifies how many digits to retain after decimal.}
 
-\item{progress_full}{To show progress in detail.}
+\item{progress_full}{Logical. TRUE to show full process as the program loops through market and product levels.}
 }
 \value{
-A data frame with market share calculated.
+A data frame
 }
 \description{
 Market Share Calculation

@@ -1,4 +1,31 @@
-#' to_excel_sheets
+
+#' Import from Successive Excel Sheets
+#'
+#' @param path File path with file's name and extension.
+#' @import openxlsx
+#' @import readxl
+#'
+#' @return A data frame
+#' @export
+
+from_excel_sheets <- function(path){
+  data <- data.frame()
+  time_start()
+  for(sheet in openxlsx::getSheetNames(path)){
+    message("Reading ",sheet," from ",basename(path),".")
+
+    if(nrow(data) == 0){
+      data <- readxl::read_excel(path, sheet = sheet, guess_max = 1048576)
+    }else{
+      data <- rbind(data, readxl::read_excel(path, sheet = sheet, guess_max = 1048576))
+    }
+  }
+  time_stop()
+  return(data)
+}
+
+
+#' Export to Successive Excel Sheets
 #'
 #' @param data A data frame/tibble.
 #' @param path File path and file name with extension. For example: "./myfolder/mydata.xlsx"
@@ -40,3 +67,7 @@ split_by_column_labels <- function(data, split_col, delete = TRUE) {
 
   return(splitted_data)
 }
+
+
+
+

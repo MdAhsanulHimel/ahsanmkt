@@ -14,6 +14,9 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     dplyr,
+    openxlsx,
+    readxl,
+    rlang,
     stringr,
     writexl
 URL: https://github.com/MdAhsanulHimel/ahsanmkt

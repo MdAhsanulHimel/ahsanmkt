@@ -52,7 +52,6 @@ seconds_to_time_string <- function(seconds) {
 #' time_stop()
 #' @export
 time_start <- function (){
-  timeStart <<- numeric(0L)
   timeStart <<- Sys.time()
   message("Program started: ", timeStart)
 }
@@ -73,8 +72,6 @@ time_start <- function (){
 #' time_stop()
 #' @export
 time_stop <- function (){
-  timeStop <<- numeric(0L)
-  runtime <<- numeric(0L)
   timeStop <<- Sys.time()
   runtime <<- as.numeric(format(timeStop, "%s")) - as.numeric(format(timeStart, "%s"))
   message("Program end: ", timeStop)
