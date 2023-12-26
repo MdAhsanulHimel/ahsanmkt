@@ -52,7 +52,11 @@ seconds_to_time_string <- function(seconds) {
 #' time_stop()
 #' @export
 time_start <- function (){
-  timeStart <<- Sys.time()
+
+  timeStart <- Sys.time()
+
+  assign("timeStart", timeStart, .GlobalEnv)
+
   message("Program started: ", timeStart)
 }
 
@@ -72,8 +76,13 @@ time_start <- function (){
 #' time_stop()
 #' @export
 time_stop <- function (){
-  timeStop <<- Sys.time()
-  runtime <<- as.numeric(format(timeStop, "%s")) - as.numeric(format(timeStart, "%s"))
+
+  timeStop <- Sys.time()
+  runtime <- as.numeric(format(timeStop, "%s")) - as.numeric(format(timeStart, "%s"))
+
+  assign("timeStop", timeStop, .GlobalEnv)
+  assign("runtime", runtime, .GlobalEnv)
+
   message("Program end: ", timeStop)
   message("Runtime: ", seconds_to_time_string(runtime))
 }
