@@ -21,3 +21,6 @@ Imports:
     writexl
 URL: https://github.com/MdAhsanulHimel/ahsanmkt
 BugReports: https://github.com/MdAhsanulHimel/ahsanmkt/issues
+Depends: 
+    R (>= 2.10)
+LazyData: true
