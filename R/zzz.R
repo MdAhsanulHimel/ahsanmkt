@@ -14,5 +14,5 @@
 
 #' @export
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Thank you for using. This package is still in development stage.")
+  packageStartupMessage("Thank you for using ahsanmkt package. This package is still in development stage.")
 }
