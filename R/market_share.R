@@ -29,6 +29,22 @@ market_share <- function(data,
                          decimals = 7,
                          progress_full = FALSE){
 
+  stopifnot("Attribute column not found" = attribute %in% colnames(data),
+            "Product level column not found" = product_level %in% colnames(data),
+            "Market column not found" = market %in% colnames(data))
+
+  stopifnot("Passed argument in base_level not found in product level" =
+              base_level %in% unique(data[[product_level]]),
+            "Passed argument in val not found in attributes" =
+              val %in% unique(data[[attribute]]),
+            "Passed argument in vol not found in attributes" =
+              vol %in% unique(data[[attribute]]),
+            "Passed argument in val_share not found in attributes" =
+              val_share %in% unique(data[[attribute]]),
+            "Passed argument in vol_share not found in attributes" =
+              vol_share %in% unique(data[[attribute]]))
+
+
   data2 <- data %>%
     filter(!(data[[attribute]] %in% c(val_share, vol_share))) %>%
     mutate(across(.cols = names(data)[1:which(names(data)==attribute)], .fns = factor))
