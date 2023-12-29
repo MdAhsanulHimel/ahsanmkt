@@ -9,7 +9,7 @@ market_share(
   market = "MARKET",
   product_level = "PROD_LEVEL",
   base_level = "1_CATEGORY_TOTAL",
-  attribute = "Attribute",
+  attribute = "ATTRIBUTE",
   val = "Sales Offtake Value (mil)",
   vol = "Sales Offtake Volume (ton)",
   val_share = "Market Share (Value)",
