@@ -2,6 +2,9 @@
 
 export(.onAttach)
 export(.onLoad)
+export(cp_half_yearly)
+export(cp_last_n_month)
+export(cp_quarter)
 export(from_excel_sheets)
 export(market_share)
 export(seconds_to_time_string)
