@@ -85,6 +85,10 @@ transform_date_rows_to_cols <- function
   })
 
   time_stop()
+
+  data_wide <- data_wide %>%
+  mutate(across(.cols = names(data_wide)[1:which(names(data_wide)=='ATTRIBUTE')], .fns = factor))
+
   return(data_wide)
 
 }
