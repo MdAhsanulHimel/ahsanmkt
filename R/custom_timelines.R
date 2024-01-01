@@ -3,7 +3,7 @@
 #' Custom Period Calculation - Quarters
 #'
 #' @param data Transformed data frame where months are in the columns.
-#' @param years Years when quarters need to be calculated.
+#' @param years Years when quarters need to be calculated. Format should be 2 digits number.
 #' @param decimals Number of decimal places to retain.
 #' @param att_column Column name in the data frame that contains attributes.
 #' @param att_average Attribute levels that need to be calculated by taking average.
@@ -70,7 +70,7 @@ cp_quarter <- function(data,
 #' Custom Period Calculation - Half Yearly
 #'
 #' @param data Transformed data frame where months are in the columns.
-#' @param years Years when half years need to be calculated.
+#' @param years Years when half years need to be calculated. Format should be 2 digits number.
 #' @param decimals Number of decimal places to retain.
 #' @param att_column Column name in the data frame that contains attributes.
 #' @param att_average Attribute levels that need to be calculated by taking average.
@@ -132,7 +132,7 @@ cp_half_yearly <- function(data,
 #' Custom Period Calculation - Last N Months
 #'
 #' @param data Transformed data frame where months are in the columns.
-#' @param monthyear Years when Last N Months need to be calculated.
+#' @param monthyear Month and year when Last N Months need to be calculated. Should be in format "Jan'22".
 #' @param n Number of months to use for calculation.
 #' @param decimals Number of decimal places to retain.
 #' @param att_column Column name in the data frame that contains attributes.
@@ -159,7 +159,10 @@ cp_last_n_month <- function(data, monthyear, n, decimals = 7,
   col_number <- which(column_names %in% monthyear)
   columns <- column_names[c(col_number-n+1):col_number]
 
-  colname <- paste0("L",n,"M'",substr(monthyear, 5,6)); message(colname); message(columns)
+  colname <- ifelse(n == 12,
+                    paste0("MAT ",substr(monthyear, 5,6)),
+                    paste0("L",n,"M'",substr(monthyear, 5,6)))
+  message(colname); message(columns)
 
   data_average[colname] <- round(rowSums(data_average[,columns])/n, decimals)
   data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
@@ -180,7 +183,7 @@ cp_last_n_month <- function(data, monthyear, n, decimals = 7,
 #' Custom Period Calculation - N Months before N Months
 #'
 #' @param data Transformed data frame where months are in the columns.
-#' @param monthyear Years when N before N need to be calculated.
+#' @param monthyear Years when N before N need to be calculated. Should be in format "Jan'22".
 #' @param n Number of months to use for calculation.
 #' @param decimals Number of decimal places to retain.
 #' @param att_column Column name in the data frame that contains attributes.
@@ -217,4 +220,50 @@ cp_n_before_n <- function(data, monthyear, n, decimals = 7,
   data_average <- data_sum <- data_end_month <- NULL;
 
   return(data_N_before_N)
+}
+
+
+
+
+
+
+#' First month to latest month calculation
+#'
+#' @param data Transformed data frame where months are in the columns.
+#' @param monthyear Years till when data should be calculated from January of the given year. Should be in format "Jan'22".
+#' @param decimals Number of decimal places to retain.
+#' @param att_column Column name in the data frame that contains attributes.
+#' @param att_average Attribute levels that need to be calculated by taking average.
+#' @param att_sum Attribute levels that need to be calculated by taking sum.
+#' @param att_end_month Attribute levels that need to be calculated by taking end_month.
+#'
+#' @return A data frame with January to latest month calculated.
+#' @export
+cp_jan_to_latest <- function(data, monthyear, decimals = 7,
+                             att_column = "ATTRIBUTE",
+                             att_average = c("PDOVAL", "STR", "ND_OOS", "WD_OOS", "OOS_STORNO", "MSVAL", "MSVOL"),
+                             att_sum = c("SALVAL", "SALVOL", "SALQTY", "PURVOL", "PURQTY", "STKVOL", "STKQTY"),
+                             att_end_month = c("WDPERC", "NDPERC", "SAHPERC", "STORENO")){
+
+  data_average <- data %>% filter(!!dplyr::sym(att_column) %in% att_average) %>% droplevels()
+  data_sum <- data %>% filter(!!dplyr::sym(att_column) %in% att_sum) %>% droplevels()
+  data_end_month <- data %>% filter(!!dplyr::sym(att_column) %in% att_end_month) %>% droplevels()
+
+  Month <- substr(monthyear, 1, 3)
+  Year <- substr(monthyear, 5, 6)
+  pattern <- paste0("^(",paste(month.abb[1:which(month.abb==Month)], collapse = "|"), ")'(", paste(Year, collapse = "|"), ")$")
+  columns <- grep(pattern, names(data), value = TRUE)
+
+  stopifnot("Passed monthyear not found in columns." = length(columns) > 0)
+
+  colname <- paste0("YTD ", Year); message(colname); message(columns)
+
+  data_average[colname] <- round(rowSums(data_average[,columns])/length(columns), decimals)
+  data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
+  data_end_month[colname] <- data_end_month[, columns[length(columns)]] %>% as.vector()
+
+  data_jan_to_latest <- rbind(data_average, data_sum, data_end_month)
+  data_average <- data_sum <- data_end_month <- NULL;
+
+  return(data_jan_to_latest)
 }

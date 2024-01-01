@@ -17,7 +17,7 @@ cp_quarter(
 \arguments{
 \item{data}{Transformed data frame where months are in the columns.}
 
-\item{years}{Years when quarters need to be calculated.}
+\item{years}{Years when quarters need to be calculated. Format should be 2 digits number.}
 
 \item{decimals}{Number of decimal places to retain.}
 

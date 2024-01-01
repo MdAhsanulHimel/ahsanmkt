@@ -18,7 +18,7 @@ cp_last_n_month(
 \arguments{
 \item{data}{Transformed data frame where months are in the columns.}
 
-\item{monthyear}{Years when Last N Months need to be calculated.}
+\item{monthyear}{Month and year when Last N Months need to be calculated. Should be in format "Jan'22".}
 
 \item{n}{Number of months to use for calculation.}
 
