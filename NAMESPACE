@@ -2,6 +2,7 @@
 
 export(.onAttach)
 export(.onLoad)
+export(cp_full_year)
 export(cp_half_yearly)
 export(cp_jan_to_latest)
 export(cp_last_n_month)

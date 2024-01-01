@@ -19,10 +19,9 @@ cp_quarter <- function(data,
                        att_sum = c("SALVAL","SALVOL", "SALQTY","PURVOL", "PURQTY","STKVOL", "STKQTY"),
                        att_end_month = c("WDPERC","NDPERC","SAHPERC","STORENO")){
 
-  stopifnot("At least one of the attributes to average is not found in data" = unique(att_average %in% unique(data[[att_column]])),
-            "At least one of the attributes to sum is not found in data" = unique(att_sum %in% unique(data[[att_column]])),
-            "At least one of the attributes to end_month is not found in data" = unique(att_end_month %in% unique(data[[att_column]]))
-            )
+  stopifnot("At least one of the attributes to average is not found in data" = unique(att_average %in% unique(data[[att_column]])))
+  stopifnot("At least one of the attributes to sum is not found in data" = unique(att_sum %in% unique(data[[att_column]])))
+  stopifnot("At least one of the attributes to end_month is not found in data" = unique(att_end_month %in% unique(data[[att_column]])) )
 
   data_average <- data %>% filter(!!dplyr::sym(att_column) %in% att_average) %>% droplevels()
   data_sum <- data %>% filter(!!dplyr::sym(att_column) %in% att_sum) %>% droplevels()
@@ -227,7 +226,7 @@ cp_n_before_n <- function(data, monthyear, n, decimals = 7,
 
 
 
-#' First month to latest month calculation
+#' Custom Period Calculation - First month to latest month
 #'
 #' @param data Transformed data frame where months are in the columns.
 #' @param monthyear Years till when data should be calculated from January of the given year. Should be in format "Jan'22".
@@ -266,4 +265,52 @@ cp_jan_to_latest <- function(data, monthyear, decimals = 7,
   data_average <- data_sum <- data_end_month <- NULL;
 
   return(data_jan_to_latest)
+}
+
+
+
+
+
+
+
+
+
+
+#' Custom Period Calculation - Full Year
+#'
+#' @param data Transformed data frame where months are in the columns.
+#' @param Year Year in two digits. For example, 22.
+#' @param decimals Number of decimal places to retain.
+#' @param att_column Column name in the data frame that contains attributes.
+#' @param att_average Attribute levels that need to be calculated by taking average.
+#' @param att_sum Attribute levels that need to be calculated by taking sum.
+#' @param att_end_month Attribute levels that need to be calculated by taking end_month.
+#'
+#' @return A data frame with Full year calculated.
+#' @export
+cp_full_year <- function(data, Year, decimals = 7,
+                         att_column = "ATTRIBUTE",
+                         att_average = c("PDOVAL", "STR", "ND_OOS", "WD_OOS", "OOS_STORNO", "MSVAL", "MSVOL"),
+                         att_sum = c("SALVAL", "SALVOL", "SALQTY", "PURVOL", "PURQTY", "STKVOL", "STKQTY"),
+                         att_end_month = c("WDPERC", "NDPERC", "SAHPERC", "STORENO")){
+
+  data_average <- data %>% filter(!!dplyr::sym(att_column) %in% att_average) %>% droplevels()
+  data_sum <- data %>% filter(!!dplyr::sym(att_column) %in% att_sum) %>% droplevels()
+  data_end_month <- data %>% filter(!!dplyr::sym(att_column) %in% att_end_month) %>% droplevels()
+
+  pattern <- paste0("^(",paste(month.abb, collapse = "|"), ")'(", paste(Year, collapse = "|"), ")$")
+  columns <- grep(pattern, names(data), value = TRUE)
+
+  stopifnot("Given Year does not have 12 months." = length(columns) == 12)
+
+  colname <- paste0("FY ", Year); message(colname); message(columns)
+
+  data_average[colname] <- round(rowSums(data_average[,columns])/length(columns), decimals)
+  data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
+  data_end_month[colname] <- data_end_month[, columns[length(columns)]] %>% as.vector()
+
+  data_full_year <- rbind(data_average, data_sum, data_end_month)
+  data_average <- data_sum <- data_end_month <- NULL;
+
+  return(data_full_year)
 }
