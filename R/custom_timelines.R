@@ -44,7 +44,7 @@ cp_quarter <- function(data,
       columns <- grep(pattern, names(data), value = TRUE)
 
       if(length(columns) == 3){
-        colname <- paste0("Q",q,"'", y); message(colname)
+        colname <- paste0("Q",q,"'", y); message(colname); message(columns)
 
         data_average[colname] <- round(rowSums(data_average[,columns])/3, decimals)
         data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
@@ -108,7 +108,7 @@ cp_half_yearly <- function(data,
       columns <- grep(pattern, names(data), value = TRUE)
 
       if(length(columns) == 6){
-        colname <- paste0("H",h,"'", y); message(colname)
+        colname <- paste0("H",h,"'", y); message(colname); message(columns)
 
         data_average[colname] <- round(rowSums(data_average[,columns])/6, decimals)
         data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
@@ -159,7 +159,7 @@ cp_last_n_month <- function(data, monthyear, n, decimals = 7,
   col_number <- which(column_names %in% monthyear)
   columns <- column_names[c(col_number-n+1):col_number]
 
-  colname <- paste0("L",n,"M'",substr(monthyear, 5,6)); message(colname)
+  colname <- paste0("L",n,"M'",substr(monthyear, 5,6)); message(colname); message(columns)
 
   data_average[colname] <- round(rowSums(data_average[,columns])/n, decimals)
   data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
@@ -169,4 +169,52 @@ cp_last_n_month <- function(data, monthyear, n, decimals = 7,
   data_average <- data_sum <- data_end_month <- NULL;
 
   return(data_LNM_added)
+}
+
+
+
+
+
+
+
+#' Custom Period Calculation - N Months before N Months
+#'
+#' @param data Transformed data frame where months are in the columns.
+#' @param monthyear Years when N before N need to be calculated.
+#' @param n Number of months to use for calculation.
+#' @param decimals Number of decimal places to retain.
+#' @param att_column Column name in the data frame that contains attributes.
+#' @param att_average Attribute levels that need to be calculated by taking average.
+#' @param att_sum Attribute levels that need to be calculated by taking sum.
+#' @param att_end_month Attribute levels that need to be calculated by taking end_month.
+#'
+#' @return A data frame with Last N Months calculation added.
+#' @export
+cp_n_before_n <- function(data, monthyear, n, decimals = 7,
+                          att_column = "ATTRIBUTE",
+                          att_average = c("PDOVAL", "STR", "ND_OOS", "WD_OOS", "OOS_STORNO", "MSVAL", "MSVOL"),
+                          att_sum = c("SALVAL", "SALVOL", "SALQTY", "PURVOL", "PURQTY", "STKVOL", "STKQTY"),
+                          att_end_month = c("WDPERC", "NDPERC", "SAHPERC", "STORENO")){
+
+  data_average <- data %>% filter(!!dplyr::sym(att_column) %in% att_average) %>% droplevels()
+  data_sum <- data %>% filter(!!dplyr::sym(att_column) %in% att_sum) %>% droplevels()
+  data_end_month <- data %>% filter(!!dplyr::sym(att_column) %in% att_end_month) %>% droplevels()
+
+  column_names <- colnames(data)   # all column names of data frame
+
+  stopifnot("Passed monthyear not found in columns." = any(column_names %in% monthyear))
+
+  col_number <- which(column_names %in% monthyear)
+  columns <- column_names[c(col_number-2*n+1):c(col_number-n)]
+
+  colname <- paste0("P",n,"M'",substr(monthyear, 5,6)); message(colname); message(columns)
+
+  data_average[colname] <- round(rowSums(data_average[,columns])/n, decimals)
+  data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
+  data_end_month[colname] <- data_end_month[, columns[length(columns)]] %>% as.vector()
+
+  data_N_before_N <- rbind(data_average, data_sum, data_end_month)
+  data_average <- data_sum <- data_end_month <- NULL;
+
+  return(data_N_before_N)
 }
