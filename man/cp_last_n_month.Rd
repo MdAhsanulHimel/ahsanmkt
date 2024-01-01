@@ -2,7 +2,7 @@
 % Please edit documentation in R/custom_timelines.R
 \name{cp_last_n_month}
 \alias{cp_last_n_month}
-\title{Custom Period Calculation - Half Yearly}
+\title{Custom Period Calculation - Last N Months}
 \usage{
 cp_last_n_month(
   data,
@@ -36,5 +36,5 @@ cp_last_n_month(
 A data frame with Last N Months calculation added.
 }
 \description{
-Custom Period Calculation - Half Yearly
+Custom Period Calculation - Last N Months
 }

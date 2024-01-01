@@ -129,7 +129,7 @@ cp_half_yearly <- function(data,
 
 
 
-#' Custom Period Calculation - Half Yearly
+#' Custom Period Calculation - Last N Months
 #'
 #' @param data Transformed data frame where months are in the columns.
 #' @param monthyear Years when Last N Months need to be calculated.
