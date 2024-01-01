@@ -153,7 +153,7 @@ cp_last_n_month <- function(data, monthyear, n, decimals = 7,
 
   column_names <- colnames(data)   # all column names of data frame
 
-  stopifnot("Passed monthyear not found in columns." = any(column_names %in% monthyear))
+  stopifnot("Passed monthyear not found in columns." = any(monthyear %in% column_names))
 
   col_number <- which(column_names %in% monthyear)
   columns <- column_names[c(col_number-n+1):col_number]
@@ -204,7 +204,7 @@ cp_n_before_n <- function(data, monthyear, n, decimals = 7,
 
   column_names <- colnames(data)   # all column names of data frame
 
-  stopifnot("Passed monthyear not found in columns." = any(column_names %in% monthyear))
+  stopifnot("Passed monthyear not found in columns." = any(monthyear %in% column_names))
 
   col_number <- which(column_names %in% monthyear)
   columns <- column_names[c(col_number-2*n+1):c(col_number-n)]

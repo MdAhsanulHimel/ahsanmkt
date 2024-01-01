@@ -18,7 +18,6 @@ Imports:
     openxlsx,
     readxl,
     rlang,
-    stringr,
     tidyr,
     writexl
 URL: https://github.com/MdAhsanulHimel/ahsanmkt
