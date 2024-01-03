@@ -150,9 +150,9 @@ market_share_single <- function(data,
 
   stopifnot("Passed argument in base_level not found in product level" =
               base_level %in% unique(data[[product_level]]),
-            "Passed argument in fact_amount not found in attributes" =
+            "Passed argument in fact_amount not found in facts" =
               fact_amount %in% unique(data[[fact]]),
-            "Passed argument in fact_share not found in attributes" =
+            "Passed argument in fact_share not found in facts" =
               fact_share %in% unique(data[[fact]]))
 
 
