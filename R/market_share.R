@@ -120,27 +120,27 @@ market_share <- function(data,
 
 #' Market Share Calculation - Single Fact
 #'
-#' @param data
-#' @param market
-#' @param product_level
-#' @param base_level
-#' @param fact
-#' @param fact_amount
-#' @param fact_share
-#' @param decimals
-#' @param progress_full
+#' @param data Name of the data frame object.
+#' @param market Column name that contains the markets.
+#' @param product_level Column name that contains the product levels.
+#' @param base_level Product level to use as denominator when calculating market share.
+#' @param fact Column name that contains the facts
+#' @param fact_amount Level among fact levels that contains amount.
+#' @param fact_share Level among fact levels that contains market share.
+#' @param decimals Numeric value that specifies how many digits to retain after decimal.
+#' @param progress_full Logical. TRUE to show full process as the program loops through market and product levels.
+#' @import dplyr
+#' @import rlang
 #'
-#' @return
+#' @return A data frame
 #' @export
-#'
-#' @examples
 market_share_single <- function(data,
-                                market = "MARKET",
-                                product_level = "PROD_LEVEL",
+                                market = "Market",
+                                product_level = "Product",
                                 base_level = "1_CATEGORY_TOTAL",
-                                fact = "ATTRIBUTE",
-                                fact_amount = "Sales Offtake Value (mil)",
-                                fact_share = "Market Share (Value)",
+                                fact = "Fact",
+                                fact_amount = "Value (Taka)",
+                                fact_share = "Value Share (%)",
                                 decimals = 7,
                                 progress_full = FALSE){
 
@@ -170,25 +170,25 @@ market_share_single <- function(data,
     deno_val <- data2 %>%   # deno means Denominator
       dplyr::filter(!!dplyr::sym(market) == m,
                     !!dplyr::sym(product_level) == base_level,
-                    !!dplyr::sym(fact) == val)
+                    !!dplyr::sym(fact) == fact_amount)
 
     for (p in unique(data[[product_level]])) {
       if(progress_full == TRUE) {message("---Product Level: ", p)}
 
       # Calculating Market Share Value
-      nume_val <- data2 %>%  # nume means Numerator
+      numerator <- data2 %>%  # nume means Numerator
         filter(!!dplyr::sym(market) == m,
                !!dplyr::sym(product_level) == p,
-               !!dplyr::sym(fact) == val)
+               !!dplyr::sym(fact) == fact_amount)
 
-      deno_val_extended <- deno_val[rep(1, each = nrow(nume_val)),]
+      denominator <- deno_val[rep(1, each = nrow(numerator)),]
 
-      share <- data.frame(nume_val[, sapply(nume_val, is.factor)],
-                              nume_val[, sapply(nume_val, is.numeric)] / deno_val_extended[, sapply(nume_val, is.numeric)],
-                              check.names = F) %>%
+      share <- data.frame(numerator[, sapply(numerator, is.factor)],
+                          numerator[, sapply(numerator, is.numeric)] / denominator[, sapply(numerator, is.numeric)],
+                          check.names = F) %>%
         mutate(
           across(where(is.numeric), ~ round(., decimals)),
-          !!fact := case_when(!!dplyr::sym(fact) == val ~ val_share)
+          !!fact := case_when(!!dplyr::sym(fact) == fact_amount ~ fact_share)
         )
 
       data_share <- rbind(data_share, share)
