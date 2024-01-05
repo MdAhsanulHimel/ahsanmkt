@@ -6,12 +6,12 @@
 \usage{
 market_share_single(
   data,
-  market = "MARKET",
-  product_level = "PROD_LEVEL",
+  market = "Market",
+  product_level = "Product",
   base_level = "1_CATEGORY_TOTAL",
-  fact = "ATTRIBUTE",
-  fact_amount = "Sales Offtake Value (mil)",
-  fact_share = "Market Share (Value)",
+  fact = "Fact",
+  fact_amount = "Value (Taka)",
+  fact_share = "Value Share (\%)",
   decimals = 7,
   progress_full = FALSE
 )
