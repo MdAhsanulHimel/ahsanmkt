@@ -2,7 +2,7 @@
 % Please edit documentation in R/transformation.R
 \name{transform_date_rows_to_cols}
 \alias{transform_date_rows_to_cols}
-\title{Title}
+\title{Transform Data - Rows to Columns}
 \usage{
 transform_date_rows_to_cols(
   data,
@@ -43,5 +43,5 @@ transform_date_rows_to_cols(
 A transformed data frame.
 }
 \description{
-Title
+Transform Data - Rows to Columns
 }
