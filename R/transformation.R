@@ -1,5 +1,5 @@
 
-#' Title
+#' Transform Data - Rows to Columns
 #'
 #' @param data A data frame. The first column should contain date in the format 202312, i.e., YEARMONTH
 #' @param div_100 Columns that should be divided by 100.
