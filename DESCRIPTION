@@ -6,12 +6,10 @@ Authors@R:
            comment = c(ORCID = "0000-0002-0485-5060"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
+URL: https://github.com/MdAhsanulHimel/ahsanmkt
+BugReports: https://github.com/MdAhsanulHimel/ahsanmkt/issues
+Depends: 
+    R (>= 2.10)
 Imports: 
     beepr,
     dplyr,
@@ -20,8 +18,10 @@ Imports:
     rlang,
     tidyr,
     writexl
-URL: https://github.com/MdAhsanulHimel/ahsanmkt
-BugReports: https://github.com/MdAhsanulHimel/ahsanmkt/issues
-Depends: 
-    R (>= 2.10)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
