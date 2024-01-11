@@ -33,8 +33,11 @@ files from xlsx to xlsb.
 data_raw <- ahsanmkt::from_excel_sheets("F:/Data/market_data_202312.xlsx")
 ```
 
-To send YM from rows to columns and send attributes/facts from columns
-to rows, use the following code. Run
+Note: `market_data_202312.xlsx` should have a column with dates. Also,
+all the attributes/facts should have their own columns.
+
+To send dates (YM) from rows to columns and send attributes/facts from
+columns to rows, use the following code. Run
 `?ahsanmkt::transform_date_rows_to_cols` in the console to know more
 about the function `transform_date_rows_to_cols()`.
 
@@ -160,10 +163,30 @@ data_FY_added <- ahsanmkt::cp_full_year(
 )
 ```
 
-The following code exports the data frame named `data_transformed` from
-R to xlsx. If the number of rows exceed row limit in Excel, then the
+To calculate market share of sale (volume), for example, use the
+following code:
+
+``` r
+data_ms_added <- ahsanmkt::market_share_single(
+  data_FY_added,
+  market = "MARKET",
+  product_level = "PRODUCT",
+  base_level = "1_CATEGORY_TOTAL",
+  fact = "ATTRIBUTE",
+  fact_amount = "SALVOL",
+  fact_share = "MSVOL",
+  decimals = 7,
+  progress_full = FALSE
+)
+```
+
+Similarly, market share for any other attributes/facts can be
+calculated.
+
+The following code exports the data frame named `data_ms_added` from R
+to xlsx. If the number of rows exceed row limit in Excel, then the
 excess data is exported to the next sheets.
 
 ``` r
-ahsanmkt::to_excel_sheets(data_FY_added, "F:/Data/market_data_202312_transformed.xlsx")
+ahsanmkt::to_excel_sheets(data_ms_added, "F:/Data/market_data_202312_transformed.xlsx")
 ```
