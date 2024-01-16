@@ -36,8 +36,10 @@ from_excel_sheets <- function(path){
 to_excel_sheets <- function(data, path, split_col = "SL", delete = TRUE){
   time_start()
   if(nrow(data) >= 1048570){
-    data$SL <- rep(paste0("Sheet", 1:ceiling(nrow(data)/1048570)),
-                   each = 1048570)[1:nrow(data)]
+    if(split_col == "SL"){
+      data$SL <- rep(paste0("Sheet", 1:ceiling(nrow(data)/1048570)),
+                     each = 1048570)[1:nrow(data)]
+    }
     data <- split_by_column_labels(data, split_col = split_col, delete = delete)
   }
   writexl::write_xlsx(data, path = path)
