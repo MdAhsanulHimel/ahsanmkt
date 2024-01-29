@@ -36,10 +36,12 @@ transform_date_rows_to_cols <- function
   data_cal <- data %>%
     mutate(across(any_of(div_100), ~ .x / 100),
            across(any_of(div_1000), ~ .x / 1000),
-           across(any_of(mult_1000), ~ .x * 1000))
+           across(any_of(mult_1000), ~ .x * 1000)) %>%
+    rename(YM = !!date_col)   # change the date column's name to YM
+
 
   data_YM_edited <- data_cal %>%
-    mutate(YM = paste0(!!dplyr::sym(date_col), "01")
+    mutate(YM = paste0(YM, "01")
            %>% as.Date(format = "%Y%m%d") %>%
              format(format = "%b'%y"))
 
@@ -54,7 +56,7 @@ transform_date_rows_to_cols <- function
   data_wide <- tryCatch({
 
     data_long %>%
-      pivot_wider(names_from = all_of(date_col), values_from = "VALUE", values_fill = 0)
+      pivot_wider(names_from = "YM", values_from = "VALUE", values_fill = 0)
 
   },
   error = function(e) {
@@ -63,15 +65,15 @@ transform_date_rows_to_cols <- function
 
     # dup_ arguments are used in the following part only
     duplicates <- data_cal %>%
-      dplyr::select(!!dplyr::sym(date_col):!!dplyr::sym(dup_attribute)) %>%
+      dplyr::select('YM':!!dplyr::sym(dup_attribute)) %>%
       tidyr::pivot_longer(cols = any_of(dup_attribute),
                           values_to = 'VALUE',
                           names_to = 'ATTRIBUTE') %>%
-      dplyr::group_by(pick(!!dplyr::sym(date_col):ATTRIBUTE)) %>%
+      dplyr::group_by(pick('YM':ATTRIBUTE)) %>%
       dplyr::filter(!!dplyr::sym(dup_market) == dup_market_level) %>%
       dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
       dplyr::filter(n > 1L) %>%
-      dplyr::select(!!dplyr::sym(dup_item_desc), !!dplyr::sym(date_col))
+      dplyr::select(!!dplyr::sym(dup_item_desc), 'YM')
 
     # showing duplicates on the console
     for(i in 1:nrow(duplicates)){
@@ -79,7 +81,7 @@ transform_date_rows_to_cols <- function
     }
 
     data_long %>%
-      pivot_wider(names_from = date_col, values_from = "VALUE",
+      pivot_wider(names_from = 'YM', values_from = "VALUE",
                   values_fn = ~ round(sum(.x, na.rm = TRUE), decimals),
                   values_fill = 0)
   })
