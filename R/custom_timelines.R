@@ -257,9 +257,17 @@ cp_jan_to_latest <- function(data, monthyear, decimals = 7,
 
   colname <- paste0("YTD ", Year); message(colname); message(columns)
 
-  data_average[colname] <- round(rowSums(data_average[,columns])/length(columns), decimals)
-  data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
-  data_end_month[colname] <- data_end_month[, columns[length(columns)]] %>% as.vector()
+  if(nrow(data_average) > 0){
+    data_average[colname] <- round(rowSums(data_average[,columns])/length(columns), decimals)
+  }
+
+  if(nrow(data_sum) > 0){
+    data_sum[colname] <- round(rowSums(data_sum[,columns]), decimals)
+  }
+
+  if(nrow(data_end_month) > 0){
+    data_end_month[colname] <- data_end_month[, columns[length(columns)]] %>% as.vector()
+  }
 
   data_jan_to_latest <- rbind(data_average, data_sum, data_end_month)
   data_average <- data_sum <- data_end_month <- NULL;
